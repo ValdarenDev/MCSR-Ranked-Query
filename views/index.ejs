@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <title>MCSR Ranked Query</title>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>MCSR Ranked Query</h1>
+
+      <form action="/" id="form" class="form" method="POST">
+        <input type="text" name="playerName" />
+        <select name="stats" class="form-select">
+          <option value="bestTime">Fastest Time</option>
+          <option value="winstreak">Best Winstreak</option>
+          <option value="matches">Matches Played</option>
+          <option value="wins">Wins</option>
+          <option value="loses">Loses</option>
+        </select>
+        <button type="submit" class="form-submit">Go</button>
+      </form>
+      <section id="cards" class="cards">
+        <% if (locals.data){ %>
+        <article class="card-item">
+          <h2 class="card-activity"><%= name %></h2>
+          <div class="card-info">
+            <span class="card-type"> <%= type %> </span>
+            <span class="card-participants">
+              <%= data %>
+              <span class="card-number"></span>
+            </span>
+          </div>
+        </article>
+        <% } %> <% if (locals.error) { %>
+        <div id="tag-error" class="tag-error"><%= error %></div>
+        <% } %>
+      </section>
+    </div>
+  </body>
+</html>
