@@ -73,7 +73,7 @@ app.post("/", async (req, res) => {
     });
   } catch (error) {
     console.error("Failed to make request:", error.message);
-    res.render("index.ejs", { error: error.message });
+    res.render("index.ejs", { error: "Unable to make the request. Confirm the IGN is spelled correctly." });
   }
 });
 
