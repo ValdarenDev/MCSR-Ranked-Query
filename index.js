@@ -1,12 +1,19 @@
-import express, { response } from "express";
+import express from "express";
 import bodyParser from "body-parser";
 import axios from "axios";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
-const port = 3000;
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 let queryResult;
 let queryType;
@@ -20,8 +27,10 @@ app.post("/", async (req, res) => {
     const response = await axios.get(
       `https://mcsrranked.com/api/users/${req.body.playerName}`
     );
+
     const result = response.data;
     let playerName = req.body.playerName;
+
     switch (req.body.stats) {
       case "bestTime":
         let bestTime = result.data.statistics.total.bestTime.ranked;
@@ -31,24 +40,31 @@ app.post("/", async (req, res) => {
         queryResult = minutes + ":" + formattedSeconds;
         queryType = "Fastest Time";
         break;
+
       case "winstreak":
         queryResult = result.data.statistics.total.highestWinStreak.ranked;
         queryType = "Best Winstreak";
         break;
+
       case "matches":
         queryResult = result.data.statistics.total.playedMatches.ranked;
         queryType = "Matches Played";
         break;
+
       case "wins":
         queryResult = result.data.statistics.total.wins.ranked;
         queryType = "Wins";
         break;
+
       case "loses":
         queryResult = result.data.statistics.total.loses.ranked;
         queryType = "Loses";
+        break;
+
       default:
         break;
     }
+
     res.render("index.ejs", {
       name: playerName,
       type: queryType,
@@ -56,14 +72,8 @@ app.post("/", async (req, res) => {
     });
   } catch (error) {
     console.error("Failed to make request:", error.message);
-    res.render("index.ejs", {
-      error: error.message,
-    });
+    res.render("index.ejs", { error: error.message });
   }
-
-  res;
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port: ${port}`);
-});
+export default app;
